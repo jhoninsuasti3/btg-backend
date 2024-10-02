@@ -1,0 +1,181 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  Environment:
+    Description: Environment in which the resources will be deploy
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: EnvironmentBtgPactual
+  SQSBatchSize:
+    Description: sqs batch size
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: SQSBatchSizeBtgPactual
+  AuthorizerTimeout:
+    Description: authorizer timeout
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: AuthorizerTimeoutBtgPactual
+  DBSuffix:
+    Description: dynamodb table suffix
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: DBSuffixBtgPactual
+  TokenExpiration:
+    Description: token expiration
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: TokenExpirationBtgPactual
+  GlobalTimeout:
+    Description: global timeout
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: GlobalTimeoutBtgPactual
+  DyanmoDBReadCapacityUnits:
+    Description: dynamodb read capacity units
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: DyanmoDBReadCapacityUnitsBtgPactual
+  DyanmoDBWriteCapacityUnits:
+    Description: dynamodb write capacity units
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: DyanmoDBWriteCapacityUnitsBtgPactual
+  SecretKey:
+    Description: Secret Key
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: SecretKeyBtgPactual
+  EnvAwsAccessKey:
+    Description: Env aws access key
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: EnvAwsAccessKeyBtgPactual
+  EnvAwsSecretAccessKey:
+    Description: Env Aws Secret access key
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: EnvAwsSecretAccessKeyBtgPactual
+  EnvAwsRegion:
+    Description: Secret Key
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: EnvAwsRegionBtgPactual
+  DBUser:
+    Description: database user
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: DBUserBtgPactual
+  DBPassword:
+    Description: database password
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: DBPasswordBtgPactual
+  DBHostWriter:
+    Description: database host writer
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: DBHostWriterBtgPactual
+  DBHostRead:
+    Description: database host read
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: DBHostReadBtgPactual
+  DBPort:
+    Description: database port
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: DBPortBtgPactual
+  DBName:
+    Description: database name
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: DBNameBtgPactual
+  StackName:
+    Description: Stack Name inmensity
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: StackNameBtgPactual
+  EnvBucketName:
+    Description: Env aws access key
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: EnvBucketNameBtgPactual
+  RegionBucket:
+    Description: Env aws region
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: RegionBucketBtgPactual
+  SendGridApiKey:
+    Description: Send Grid Api Key
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: SendGridApiKeyBtgPactual
+  FromEmail:
+    Description: From Email
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: FromEmailBtgPactual
+  VpcRds:
+    Description: VpcRdsBtgPactual
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: VpcRdsBtgPactual
+  SubnetB:
+    Description: SubnetBBtgPactual
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: SubnetBBtgPactual
+  SubnetA:
+    Description: SubnetABtgPactual
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: SubnetABtgPactual
+Resources:
+  # Layer stack
+  LayerStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: template_layers.yaml
+      Parameters:
+        StackName: !Ref StackName
+        Environment: !Ref Environment
+      TimeoutInMinutes: 10
+
+  # Dynamo Stack
+  DynamoStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: template_dynamo.yaml
+      Parameters:
+        StackName: !Ref StackName
+        Environment: !Ref Environment
+        DyanmoDBReadCapacityUnits: !Ref DyanmoDBReadCapacityUnits
+        DyanmoDBWriteCapacityUnits: !Ref DyanmoDBWriteCapacityUnits
+      TimeoutInMinutes: 10
+
+  # Authorizer Stack
+  AuthorizerStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: template_authorizer.yaml
+      Parameters:
+        GlobalTimeout: !Ref GlobalTimeout
+        Environment: !Ref Environment
+        SecretKey: !Ref SecretKey
+        StackName: !Ref StackName
+        # Layer
+        LayerDependencies: !GetAtt LayerStack.Outputs.LayerDependencies
+        # Dynamo
+        DynamoTableName: !GetAtt DynamoStack.Outputs.DynamoTableName
+      TimeoutInMinutes: 10
+
+  ApiGatewayStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: template.yaml
+      Parameters:
+        Environment: !Ref Environment
+        SecretKey: !Ref SecretKey
+        DBName: !Ref DBName
+        DBUser: !Ref DBUser
+        DBPassword: !Ref DBPassword
+        DBPort: !Ref DBPort
+        DBHostRead: !Ref DBHostRead
+        DBHostWriter: !Ref DBHostWriter
+        Environment: !Ref Environment
+        EnvAwsSecretAccessKey: !Ref EnvAwsSecretAccessKey
+        EnvAwsRegion: !Ref EnvAwsRegion
+        EnvAwsAccessKey: !Ref EnvAwsAccessKey
+        GlobalTimeout: !Ref GlobalTimeout
+        TokenExpiration: !Ref TokenExpiration
+        AuthorizerTimeout: !Ref AuthorizerTimeout
+        SQSBatchSize: !Ref SQSBatchSize
+        EnvBucketName: !Ref EnvBucketName
+        RegionBucket: !Ref RegionBucket
+        SendGridApiKey: !Ref SendGridApiKey
+        FromEmail: !Ref FromEmail
+        StackName: !Ref StackName
+        VpcRds: !Ref VpcRds
+        SubnetA: !Ref SubnetA
+        SubnetB: !Ref SubnetB
+        # Layer
+        LayerDependencies: !GetAtt LayerStack.Outputs.LayerDependencies
+        # Dynamo
+        DynamoTableName: !GetAtt DynamoStack.Outputs.DynamoTableName
+        AuthorizerArn: !GetAtt AuthorizerStack.Outputs.AuthorizerArn
+      TimeoutInMinutes: 10

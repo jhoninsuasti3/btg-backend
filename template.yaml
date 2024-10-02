@@ -1,0 +1,406 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Stack Microservices
+
+Parameters:
+  Environment:
+    Description: Environment in which the resources will be deploy
+    Type: String
+    Default: development
+  SecretKey:
+    Description: secret key
+    Type: String
+    Default: secret_key
+  DBName:
+    Description: database name
+    Type: String
+    Default: inmensity-database-name
+  DBPort:
+    Description: database port
+    Type: String
+    Default: inmensity-database-port
+  DBUser:
+    Description: database user
+    Type: String
+    Default: inmensity-database-user
+  DBPassword:
+    Description: database password
+    Type: String
+    Default: inmensity-database-password
+  DBHostRead:
+    Description: database host read
+    Type: String
+    Default: inmensity-database-host-read
+  DBHostWriter:
+    Description: database host writer
+    Type: String
+    Default: inmensity-database-host-writer
+  EnvAwsSecretAccessKey:
+    Description: Env Aws Secret access key
+    Type: String
+    Default: secret_access_key
+  EnvAwsRegion:
+    Description: Env aws region
+    Type: String
+    Default: env_aws_region
+  EnvAwsAccessKey:
+    Description: Env aws access key
+    Type: String
+    Default: access key
+  GlobalTimeout:
+    Description: Global timeout
+    Type: Number
+    Default: 30
+  TokenExpiration:
+    Description: Token expiration
+    Type: Number
+    Default: 60
+  AuthorizerTimeout:
+    Description: Authorizer timeout
+    Type: Number
+    Default: 30
+  LayerDependencies:
+    Description: Layer dependencies
+    Type: String
+  DynamoTableName:
+    Description: Dynamo table name
+    Type: String
+  AuthorizerArn:
+    Description: Authorizer Arn
+    Type: String
+  SQSBatchSize:
+    Description: sqs batch size
+    Type: String
+    Default: 5
+  StackName:
+    Description: stack Name
+    Type: String
+    Default: inmensity-stack-name
+  EnvBucketName:
+    Description: Env aws access key
+    Type: String
+    Default: bucket_name
+  RegionBucket:
+    Description: Env aws region
+    Type: String
+    Default: us-east-1
+  SendGridApiKey:
+    Description: Send Grid Api Key
+    Type: String
+    Default: SendGridApiKey
+  FromEmail:
+    Description: From Email
+    Type: String
+    Default: FromEmail
+  VpcRds:
+    Description: Vpc Rds
+    Type: String
+    Default: VpcRds
+  SubnetB:
+    Description: Subnet
+    Type: String
+    Default: SubnetB
+  SubnetA:
+    Description: Subnet
+    Type: String
+    Default: SubnetA
+Globals:
+  Function:
+    Timeout: !Ref GlobalTimeout
+    Tracing: Active
+    MemorySize: 256
+    Handler: app.handler
+    Runtime: python3.12
+    VpcConfig:
+      SecurityGroupIds:
+        - !Ref LambdasSecutiryGroup
+      SubnetIds:
+        - !Ref SubnetA
+        - !Ref SubnetB
+    Architectures:
+      - x86_64
+    Environment:
+      Variables:
+        ENVIRONMENT: !Ref Environment
+
+Resources:
+  Api:
+    Type: AWS::Serverless::Api
+    Name: !Sub api-${StackName}-${Environment}
+    Properties:
+      TracingEnabled: true
+      StageName: !Ref Environment
+      Cors:
+        AllowOrigin: "'*'"
+        AllowMethods: "'*'"
+        AllowHeaders: "'*'"
+      GatewayResponses:
+        DEFAULT_4XX:
+          StatusCode: 401
+          ResponseParameters:
+            Headers:
+              Access-Control-Expose-Headers: "'*'"
+              Access-Control-Allow-Origin: "'*'"
+        UNAUTHORIZED:
+          StatusCode: 401
+          ResponseParameters:
+            Headers:
+              Access-Control-Expose-Headers: "'*'"
+              Access-Control-Allow-Origin: "'*'"
+          ResponseTemplates:
+            application/json: '{ "error": { "code": "custom-401-unauthorized", "message": $context.error.messageString }, "requestId": "$context.requestId" }'
+        ACCESS_DENIED:
+          StatusCode: 401
+          ResponseParameters:
+            Headers:
+              Access-Control-Expose-Headers: "'*'"
+              Access-Control-Allow-Origin: "'*'"
+          ResponseTemplates:
+            application/json: '{ "error": { "code": "custom-401-access-denied", "message": $context.error.messageString }, "requestId": "$context.requestId" }'
+        INVALID_API_KEY:
+          StatusCode: 401
+          ResponseTemplates:
+            application/json: '{ "error": { "code": "custom-401-invalid-api-key", "message": $context.error.messageString }, "requestId": "$context.requestId" }'
+          ResponseParameters:
+            Headers:
+              Access-Control-Expose-Headers: "'*'"
+              Access-Control-Allow-Origin: "'*'"
+        MISSING_AUTHENTICATION_TOKEN:
+          StatusCode: 401
+          ResponseParameters:
+            Headers:
+              Access-Control-Expose-Headers: "'*'"
+              Access-Control-Allow-Origin: "'*'"
+          ResponseTemplates:
+            application/json: '{ "error": { "code": "custom-401-missing-token", "message": $context.error.messageString }, "requestId": "$context.requestId" }'
+        EXPIRED_TOKEN:
+          StatusCode: 401
+          ResponseParameters:
+            Headers:
+              Access-Control-Expose-Headers: "'*'"
+              Access-Control-Allow-Origin: "'*'"
+          ResponseTemplates:
+            application/json: '{ "error": { "code": "custom-401-expired-token", "message": $context.error.messageString }, "requestId": "$context.requestId" }'
+        AUTHORIZER_CONFIGURATION_ERROR:
+          StatusCode: 401
+          ResponseParameters:
+            Headers:
+              Access-Control-Expose-Headers: "'*'"
+              Access-Control-Allow-Origin: "'*'"
+          ResponseTemplates:
+            application/json: '{ "error": { "code": "custom-401-auth-config-error", "message": $context.error.messageString }, "requestId": "$context.requestId" }'
+        AUTHORIZER_FAILURE:
+          StatusCode: 401
+          ResponseParameters:
+            Headers:
+              Access-Control-Expose-Headers: "'*'"
+              Access-Control-Allow-Origin: "'*'"
+          ResponseTemplates:
+            application/json: '{ "error": { "code": "custom-401-authorizer-failed", "message": $context.error.messageString }, "requestId": "$context.requestId" }'
+      Auth:
+        DefaultAuthorizer: LambdaAuthorizer
+        AddDefaultAuthorizerToCorsPreflight: false
+        Authorizers:
+          LambdaAuthorizer:
+            FunctionArn: !Ref AuthorizerArn
+
+  AuthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: modules/auth
+      FunctionName: !Sub auth-${StackName}-${Environment}
+      Description: !Sub Auth microservice «${Environment}»
+      Layers:
+        - !Ref LayerDependencies
+      Environment:
+        Variables:
+          FUNCTION_NAME: !Sub auth-${StackName}-${Environment}
+          TOKEN_EXPIRATION: !Ref TokenExpiration
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - VPCAccessPolicy: {}
+      Events:
+        validateAuth:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /auth
+            Method: GET
+        Singin:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /auth/signin
+            Method: POST
+            Auth:
+              Authorizer: NONE
+        Singup:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /auth/signup
+            Method: POST
+            Auth:
+              Authorizer: NONE
+        Social:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /auth/social
+            Method: POST
+            Auth:
+              Authorizer: NONE
+        SocialRegister:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /auth/social/register
+            Method: POST
+        RequestTest:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /auth/request_test
+            Method: GET
+            Auth:
+              Authorizer: NONE
+
+  WhatsappFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: modules/whatsapp
+      FunctionName: !Sub whatsapp-${StackName}-${Environment}
+      Description: !Sub Whatsapp microservice «${Environment}»
+      Layers:
+        - !Ref LayerDependencies
+      Environment:
+        Variables:
+          FUNCTION_NAME: !Sub Whatsapp-${StackName}-${Environment}
+          TOKEN_EXPIRATION: !Ref TokenExpiration
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - VPCAccessPolicy: {}
+      Events:
+        WebhookPost:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /whatsapp/{tenant_id}/webhook
+            Method: POST
+            Auth:
+              Authorizer: NONE
+        WebhookGet:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /whatsapp/{tenant_id}/webhook
+            Method: GET
+            Auth:
+              Authorizer: NONE
+
+  ChannelsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: modules/channels
+      FunctionName: !Sub Channels-${StackName}-${Environment}
+      Description: !Sub Channels microservice «${Environment}»
+      Layers:
+        - !Ref LayerDependencies
+      Environment:
+        Variables:
+          FUNCTION_NAME: !Sub Channels-${StackName}-${Environment}
+          TOKEN_EXPIRATION: !Ref TokenExpiration
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - VPCAccessPolicy: {}
+      Events:
+        ChannelPost:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /channels
+            Method: POST
+            Auth:
+              Authorizer: NONE
+        ChannelListGet:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /channels/{channel_id}/list
+            Method: GET
+            Auth:
+              Authorizer: NONE
+        ChannelGet:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /channels/{channel_id}
+            Method: GET
+            Auth:
+              Authorizer: NONE
+
+        ChannelPut:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /channels/{channel_id}
+            Method: PUT
+            Auth:
+              Authorizer: NONE
+        ChannelDelete:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /channels/{channel_id}
+            Method: DELETE
+            Auth:
+              Authorizer: NONE
+
+  SecurityFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: modules/security
+      FunctionName: !Sub Security-${StackName}-${Environment}
+      Description: !Sub Security microservice «${Environment}»
+      Layers:
+        - !Ref LayerDependencies
+      Environment:
+        Variables:
+          FUNCTION_NAME: !Sub Security-${StackName}-${Environment}
+          TOKEN_EXPIRATION: !Ref TokenExpiration
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - VPCAccessPolicy: {}
+      Events:
+        ClaimsGet:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /api/v1/tenants/{tenant_id}/security/roles/{rol_id}
+            Method: GET
+            Auth:
+              Authorizer: NONE
+
+  LambdasSecutiryGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow lambda private
+      GroupName: !Sub lambdas-sg-${StackName}-${Environment}
+      VpcId: !Ref VpcRds
+      SecurityGroupIngress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+
+
+Outputs:
+  Region:
+    Description: "Region"
+    Value: !Ref AWS::Region
+  MyApi:
+    Value: !Ref Api
+  ApiUrl:
+    Value: !Sub "https://${Api}.execute-api.${AWS::Region}.amazonaws.com/${Environment}"
+    Description: URL de la API

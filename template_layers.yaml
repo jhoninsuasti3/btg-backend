@@ -1,0 +1,29 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Stack Layers inmensity
+
+Parameters:
+  Environment:
+    Description: Environment in which the resources will be deploy
+    Type: String
+    Default: development
+  StackName:
+    Description: stack Name
+    Type: String
+    Default: inmensity-stack-name
+
+Resources:
+  LayerDependencies:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: !Sub layer-dep-${StackName}-${Environment}
+      Description: Libraries python dependencies basic
+      ContentUri: ./layers/layer_kernel/layer_kernel.zip
+      CompatibleRuntimes:
+        - python3.12
+
+Outputs:
+  LayerDependencies:
+    Value: !Ref LayerDependencies
+    Export:
+      Name: !Sub layer-dep-${StackName}-${Environment}
