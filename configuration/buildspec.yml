@@ -10,10 +10,10 @@ phases:
       - export PATH=$PATH:$USER_BASE_PATH/bin
       # Add layers to lambdas
       - python -m pip install --upgrade pip
-      - pip install -r layers/layer_kernel/requirements.txt -t layers/layer_kernel/python
-      - cd layers/layer_kernel
-      - zip -r layer_kernel.zip python
-      - cd ../..
+      - pip install -r layer_dependencies_basic/requirements.txt -t layer_dependencies_basic/python
+      - cd layer_dependencies_basic
+      - zip -r layer_dependencies_basic.zip python
+      - cd ..
       # Add requirements to lambdas
       - python generate_requirements.py $SECRET_TOKEN_GITHUB $BRANCH_DEPLOY
       - python change_name.py $ENVIRONMENT

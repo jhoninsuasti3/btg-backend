@@ -19,8 +19,6 @@ app.add_middleware(
 
 router = APIRouter(prefix="/auth")
 
-# service = FundService()
-
 
 @router.get("")
 async def api_get_auth():
