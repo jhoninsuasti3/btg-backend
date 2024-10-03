@@ -50,6 +50,16 @@ Resources:
       KeySchema:
         - AttributeName: uuid
           KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: Email-index
+          KeySchema:
+            - AttributeName: email
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: !Ref DyanmoDBReadCapacityUnits
+            WriteCapacityUnits: !Ref DyanmoDBWriteCapacityUnits
       ProvisionedThroughput:
         ReadCapacityUnits: !Ref DyanmoDBReadCapacityUnits
         WriteCapacityUnits: !Ref DyanmoDBWriteCapacityUnits
@@ -61,9 +71,32 @@ Resources:
       AttributeDefinitions:
         - AttributeName: uuid
           AttributeType: S
+        - AttributeName: user_id
+          AttributeType: S
+        - AttributeName: found_type
+          AttributeType: S
       KeySchema:
         - AttributeName: uuid
           KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: User-index
+          KeySchema:
+            - AttributeName: user_id
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: !Ref DyanmoDBReadCapacityUnits
+            WriteCapacityUnits: !Ref DyanmoDBWriteCapacityUnits
+        - IndexName: Found-index
+          KeySchema:
+            - AttributeName: found_type
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: !Ref DyanmoDBReadCapacityUnits
+            WriteCapacityUnits: !Ref DyanmoDBWriteCapacityUnits
       ProvisionedThroughput:
         ReadCapacityUnits: !Ref DyanmoDBReadCapacityUnits
         WriteCapacityUnits: !Ref DyanmoDBWriteCapacityUnits
