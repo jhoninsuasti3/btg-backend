@@ -64,6 +64,18 @@ Parameters:
     Description: From Email
     Type: String
     Default: FromEmail
+  UsersTableName:
+    Description: From Email
+    Type: String
+    Default: UsersTableName
+  TransactionsTableName:
+    Description: From Email
+    Type: String
+    Default: TransactionsTableName
+  FoundsTableName:
+    Description: From Email
+    Type: String
+    Default: FoundsTableName
 Globals:
   Function:
     Timeout: !Ref GlobalTimeout
@@ -76,7 +88,9 @@ Globals:
     Environment:
       Variables:
         ENVIRONMENT: !Ref Environment
-
+        USERS_TABLE_NAME: !Ref UsersTableName
+        TRANSACTIONS_TABLE_NAME: !Ref TransactionsTableName
+        FOUNDS_TABLE_NAME: !Ref FoundsTableName
 Resources:
   Api:
     Type: AWS::Serverless::Api

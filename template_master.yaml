@@ -122,5 +122,8 @@ Resources:
         LayerDependencies: !GetAtt LayerStack.Outputs.LayerDependencies
         # Dynamo
         DynamoTableName: !GetAtt DynamoStack.Outputs.DynamoTableName
+        UsersTableName: !GetAtt DynamoStack.Outputs.UsersTableName
+        TransactionsTableName: !GetAtt DynamoStack.Outputs.TransactionsTableName
+        FoundsTableName: !GetAtt DynamoStack.Outputs.FoundsTableName
         AuthorizerArn: !GetAtt AuthorizerStack.Outputs.AuthorizerArn
       TimeoutInMinutes: 10
