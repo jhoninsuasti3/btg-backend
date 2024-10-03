@@ -54,6 +54,34 @@ Resources:
         ReadCapacityUnits: !Ref DyanmoDBReadCapacityUnits
         WriteCapacityUnits: !Ref DyanmoDBWriteCapacityUnits
 
+  TransactionsDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub DbAuthoTableTransactions${Environment}
+      AttributeDefinitions:
+        - AttributeName: uuid
+          AttributeType: S
+      KeySchema:
+        - AttributeName: uuid
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: !Ref DyanmoDBReadCapacityUnits
+        WriteCapacityUnits: !Ref DyanmoDBWriteCapacityUnits
+
+  FoundsDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub DbAuthoTableFounds${Environment}
+      AttributeDefinitions:
+        - AttributeName: uuid
+          AttributeType: S
+      KeySchema:
+        - AttributeName: uuid
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: !Ref DyanmoDBReadCapacityUnits
+        WriteCapacityUnits: !Ref DyanmoDBWriteCapacityUnits
+
 Outputs:
   DynamoTableName:
     Value: !Sub DbAuthoTable${Environment}
@@ -63,3 +91,11 @@ Outputs:
     Value: !Sub DbAuthoTableUsers${Environment}
     Export:
       Name: !Sub DbAuthoTableUsers${Environment}
+  TransactionsTableName:
+    Value: !Sub DbAuthoTableTransactions${Environment}
+    Export:
+      Name: !Sub DbAuthoTableTransactions${Environment}
+  FoundsTableName:
+    Value: !Sub DbAuthoTableFounds${Environment}
+    Export:
+      Name: !Sub DbAuthoTableFounds${Environment}
