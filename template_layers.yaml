@@ -18,7 +18,7 @@ Resources:
     Properties:
       LayerName: !Sub layer-dep-${StackName}-${Environment}
       Description: Libraries python dependencies basic
-      ContentUri: ./layers/layer_kernel/layer_kernel.zip
+      ContentUri: ./layer_dependencies_basic/layer_dependencies_basic.zip
       CompatibleRuntimes:
         - python3.12
 
