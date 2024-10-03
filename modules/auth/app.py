@@ -27,6 +27,11 @@ async def api_get_auth():
     return {"message": "Result api get"}
 
 
+@router.get("/request_test")
+async def api_get_auth():
+    return {"message": "Result api get request_test"}
+
+
 # @router.post("/cancel")
 # async def cancel_subscription(request: CancelSubscriptionRequest):
 #     result = await service.cancel_subscription(request)

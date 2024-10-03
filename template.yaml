@@ -180,6 +180,8 @@ Resources:
             RestApiId: !Ref Api
             Path: /auth
             Method: GET
+            Auth:
+              Authorizer: NONE
         Singin:
           Type: Api
           Properties:
