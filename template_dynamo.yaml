@@ -47,6 +47,8 @@ Resources:
       AttributeDefinitions:
         - AttributeName: uuid
           AttributeType: S
+        - AttributeName: email
+          AttributeType: S
       KeySchema:
         - AttributeName: uuid
           KeyType: HASH
@@ -108,9 +110,21 @@ Resources:
       AttributeDefinitions:
         - AttributeName: uuid
           AttributeType: S
+        - AttributeName: category
+          AttributeType: S
       KeySchema:
         - AttributeName: uuid
           KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: Category-index
+          KeySchema:
+            - AttributeName: category
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+          ProvisionedThroughput:
+            ReadCapacityUnits: !Ref DyanmoDBReadCapacityUnits
+            WriteCapacityUnits: !Ref DyanmoDBWriteCapacityUnits
       ProvisionedThroughput:
         ReadCapacityUnits: !Ref DyanmoDBReadCapacityUnits
         WriteCapacityUnits: !Ref DyanmoDBWriteCapacityUnits
