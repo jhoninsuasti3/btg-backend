@@ -1,4 +1,4 @@
--r layers/layer_kernel/requirements.txt
+-r layer_dependencies_basic/requirements.txt
 httpx==0.23.3
 Faker==17.0.0
 flake8

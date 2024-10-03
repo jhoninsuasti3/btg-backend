@@ -3,6 +3,7 @@ import os
 
 from mangum import Mangum
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.requests import Request
 
 app = FastAPI(
     debug=os.getenv("DEBUG", False),
@@ -21,12 +22,16 @@ router = APIRouter(prefix="/auth")
 
 
 @router.get("")
-async def api_get_auth():
+async def api_get_auth(
+    request: Request,
+):
     return {"message": "Result api get"}
 
 
 @router.get("/request_test")
-async def api_get_auth():
+async def api_get_auth(
+    request: Request,
+):
     return {"message": "Result api get request_test"}
 
 
