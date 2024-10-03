@@ -10,7 +10,7 @@ def search_folders(token, branch):
             requirements_path = os.path.join(subfolder, "requirements.txt")
             with open(requirements_path, "a") as file:
                 file.write("\n")
-                req = f"git+https://{token}@github.com/jhoninsuasti3/btg-backend/BTGPactual.Serverless.git@{branch}"
+                req = f"git+https://{token}@github.com/jhoninsuasti3/btg-backend.git@{branch}"
                 print("ADD : ", req)
                 file.write(req)
 
