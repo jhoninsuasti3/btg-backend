@@ -39,9 +39,27 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: !Ref DyanmoDBReadCapacityUnits
         WriteCapacityUnits: !Ref DyanmoDBWriteCapacityUnits
+  
+  UsersDBTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub DbAuthoTableUsers${Environment}
+      AttributeDefinitions:
+        - AttributeName: uuid
+          AttributeType: S
+      KeySchema:
+        - AttributeName: uuid
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: !Ref DyanmoDBReadCapacityUnits
+        WriteCapacityUnits: !Ref DyanmoDBWriteCapacityUnits
 
 Outputs:
   DynamoTableName:
     Value: !Sub DbAuthoTable${Environment}
     Export:
       Name: !Sub DbAuthoTable${Environment}
+  UsersTableName:
+    Value: !Sub DbAuthoTableUsers${Environment}
+    Export:
+      Name: !Sub DbAuthoTableUsers${Environment}

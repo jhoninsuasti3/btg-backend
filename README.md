@@ -55,7 +55,12 @@
    ```bash
    sam local start-api
    ```
+####  Validaciones
+   - El usuario solo puede estar activo a un solo fondo.
+   - 
 
+### Dudas
+   - ¿ Como el usuario agrega un monto a su cuenta ?
 ### Documentation
 
 Estructura del Módulo Funds
