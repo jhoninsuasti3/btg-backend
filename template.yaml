@@ -238,7 +238,7 @@ Resources:
   FoundsFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: modules/founds
+      CodeUri: modules/funds
       FunctionName: !Sub founds-${StackName}-${Environment}
       Description: !Sub founds microservice «${Environment}»
       Layers:
