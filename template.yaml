@@ -257,7 +257,7 @@ Resources:
           Properties:
             RestApiId: !Ref Api
             Path: /funds/subscribe
-            Method: GET
+            Method: POST
             Auth:
               Authorizer: NONE
         FoundsCancel:

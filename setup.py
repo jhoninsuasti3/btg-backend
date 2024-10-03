@@ -7,7 +7,6 @@ setup(
     name="shared_package",
     packages=[
         "shared_package",
-        "shared_package.db",
         "shared_package.domain",
         "shared_package.domain.funds",
         "shared_package.domain.transactions",

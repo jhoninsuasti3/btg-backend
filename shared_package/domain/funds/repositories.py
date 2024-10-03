@@ -7,28 +7,6 @@ class FundRepository:
     def __init__(self):
         self.subscriptions = []
         self.table_fund = client_dynamo.Table(EnvironmentVariables.FOUNDS_TABLE_NAME)
-        # self.funds = [
-        #     Fund(
-        #         id=1,
-        #         name="FPV_BTG_PACTUAL_RECAUDADORA",
-        #         category="FPV",
-        #         min_investment=75000,
-        #     ),
-        #     Fund(
-        #         id=2,
-        #         name="FPV_BTG_PACTUAL_ECOPETROL",
-        #         category="FPV",
-        #         min_investment=125000,
-        #     ),
-        #     Fund(id=3, name="DEUDAPRIVADA", category="FPV", min_investment=50000),
-        #     Fund(id=4, name="FDO-ACCIONES", category="FIC", min_investment=250000),
-        #     Fund(
-        #         id=5,
-        #         name="FPV_BTG_PACTUAL_DINAMICA",
-        #         category="FIC",
-        #         min_investment=100000,
-        #     ),
-        # ]
 
     def subscribe(self, subscription: Subscription):
         self.subscriptions.append(subscription)
