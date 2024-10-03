@@ -221,6 +221,38 @@ Resources:
             Auth:
               Authorizer: NONE
 
+  FoundsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: modules/founds
+      FunctionName: !Sub founds-${StackName}-${Environment}
+      Description: !Sub founds microservice «${Environment}»
+      Layers:
+        - !Ref LayerDependencies
+      Environment:
+        Variables:
+          FUNCTION_NAME: !Sub founds-${StackName}-${Environment}
+          TOKEN_EXPIRATION: !Ref TokenExpiration
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - VPCAccessPolicy: {}
+      Events:
+        FoundsSuscribe:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /founds/subscribe
+            Method: GET
+            Auth:
+              Authorizer: NONE
+        FoundsCancel:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /founds/cancel
+            Method: GET
+            Auth:
+              Authorizer: NONE
 Outputs:
   Region:
     Description: "Region"
