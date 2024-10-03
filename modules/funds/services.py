@@ -25,7 +25,7 @@ class FundService:
             #     category=fund.get("category"),
             # )
             {
-                "id":fund.get("uuid"),
+                "id": fund.get("uuid"),
                 "name": fund.get("name"),
                 "min_investment": float(fund.get("min_amount")),
                 "category": fund.get("category"),
