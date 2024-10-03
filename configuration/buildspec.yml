@@ -16,6 +16,7 @@ phases:
       - cd ../..
       # Add requirements to lambdas
       - python generate_requirements.py $SECRET_TOKEN_GITHUB $BRANCH_DEPLOY
+      - python change_name.py $ENVIRONMENT
       - sam build -t template_master.yaml
       - aws cloudformation package --template-file .aws-sam/build/template.yaml --s3-bucket $BUCKET_NAME --output-template-file packaged-template.yml
       - aws s3 cp ./packaged-template.yml s3://$BUCKET_NAME/packaged-template.yml
