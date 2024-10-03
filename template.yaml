@@ -14,7 +14,7 @@ Parameters:
   EnvAwsRegion:
     Description: Env aws region
     Type: String
-    Default: env_aws_region
+    Default: us-east-1
   EnvAwsAccessKey:
     Description: Env aws access key
     Type: String
@@ -91,6 +91,7 @@ Globals:
         USERS_TABLE_NAME: !Ref UsersTableName
         TRANSACTIONS_TABLE_NAME: !Ref TransactionsTableName
         FOUNDS_TABLE_NAME: !Ref FoundsTableName
+        ENV_AWS_REGION: !Ref EnvAwsRegion
 Resources:
   Api:
     Type: AWS::Serverless::Api
