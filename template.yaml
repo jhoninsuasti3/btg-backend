@@ -268,6 +268,23 @@ Resources:
             Method: GET
             Auth:
               Authorizer: NONE
+        FoundsAll:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /founds
+            Method: GET
+            Auth:
+              Authorizer: NONE
+        FilterFound:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /founds/{id}
+            Method: GET
+            Auth:
+              Authorizer: NONE
+
 Outputs:
   Region:
     Description: "Region"
