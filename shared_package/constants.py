@@ -14,17 +14,20 @@ class EnvironmentVariables:
     ENV_AWS_ACCESS_KEY_ID: str = os.getenv("ENV_AWS_ACCESS_KEY_ID", "")
     ENV_AWS_SECRET_ACCESS_KEY: str = os.getenv("ENV_AWS_SECRET_ACCESS_KEY", "")
     ENV_AWS_REGION: str = os.getenv("ENV_AWS_REGION", "")
+    FOUNDS_TABLE_NAME: str = os.getenv("FOUNDS_TABLE_NAME", "")
+    TRANSACTIONS_TABLE_NAME: str = os.getenv("TRANSACTIONS_TABLE_NAME", "")
+    USERS_TABLE_NAME: str = os.getenv("USERS_TABLE_NAME", "")
 
 
 if EnvironmentVariables.ENVIRONMENT.lower() in ["test", "local"]:
-    dynamodb = boto3.resource(
+    client_dynamo = boto3.resource(
         "dynamodb",
         aws_access_key_id=EnvironmentVariables.ENV_AWS_ACCESS_KEY_ID,
         aws_secret_access_key=EnvironmentVariables.ENV_AWS_SECRET_ACCESS_KEY,
         region_name=EnvironmentVariables.ENV_AWS_REGION,
     )
 else:
-    dynamodb = boto3.resource(
+    client_dynamo = boto3.resource(
         "dynamodb",
         region_name=EnvironmentVariables.ENV_AWS_REGION,
     )

@@ -11,7 +11,7 @@ app = FastAPI(
 )
 
 
-router = APIRouter(prefix="/founds")
+router = APIRouter(prefix="/funds")
 
 service = FundService()
 
@@ -30,7 +30,7 @@ async def api_cancel_subscription(
     return {"message": result}
 
 
-@router.get("/funds")
+@router.get("")
 async def api_get_funds():
     funds = await service.get_funds()
     return {"funds": funds}

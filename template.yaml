@@ -256,7 +256,7 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref Api
-            Path: /founds/subscribe
+            Path: /funds/subscribe
             Method: GET
             Auth:
               Authorizer: NONE
@@ -264,7 +264,7 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref Api
-            Path: /founds/cancel
+            Path: /funds/cancel
             Method: GET
             Auth:
               Authorizer: NONE
@@ -272,7 +272,7 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref Api
-            Path: /founds
+            Path: /funds
             Method: GET
             Auth:
               Authorizer: NONE
@@ -280,7 +280,7 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref Api
-            Path: /founds/{id}
+            Path: /funds/{id}
             Method: GET
             Auth:
               Authorizer: NONE

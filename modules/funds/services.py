@@ -18,11 +18,17 @@ class FundService:
     async def get_funds(self) -> List[FundResponse]:
         funds = self.logic.repository.get_funds()
         return [
-            FundResponse(
-                id=fund.id,
-                name=fund.name,
-                min_investment=fund.min_investment,
-                category=fund.category,
-            )
+            # FundResponse(
+            #     id=fund.get("uuid"),
+            #     name=fund.get("name"),
+            #     min_investment=float(fund.get("min_amount")),
+            #     category=fund.get("category"),
+            # )
+            {
+                "id":fund.get("uuid"),
+                "name": fund.get("name"),
+                "min_investment": float(fund.get("min_amount")),
+                "category": fund.get("category"),
+            }
             for fund in funds
         ]
