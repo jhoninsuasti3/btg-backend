@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv(dotenv_path=".env")
 
 
-def create_ssm_parameters(params, region_origin):
+def create_ssm_parameters(params, region_origin, ENVIRONMENT):
     ssm_client = boto3.client(
         "ssm",
         region_name=region_origin,
@@ -16,6 +16,7 @@ def create_ssm_parameters(params, region_origin):
 
     for param in params:
         param_name = param.get("Name")
+        param_name = f"{param_name}{ENVIRONMENT}"
         description = param.get(
             "Description", f"Default value for parameter {param_name}"
         )
@@ -28,7 +29,6 @@ def create_ssm_parameters(params, region_origin):
             Type="String",
             Overwrite=True,
         )
-
         print(f"Parameter '{param_name}' created with value '{value}'")
 
 
@@ -75,38 +75,10 @@ if __name__ == "__main__":
             "Value": "mysecretkey",
         },
         {
-            "Name": "EnvAwsAccessKeyBtgPactual",
-            "Description": "AWS Access Key",
-            "Value": "YOUR_ACCESS_KEY",
-        },
-        {
-            "Name": "EnvAwsSecretAccessKeyBtgPactual",
-            "Description": "AWS Secret Access Key",
-            "Value": "YOUR_SECRET_KEY",
-        },
-        {
             "Name": "EnvAwsRegionBtgPactual",
             "Description": "AWS Region",
             "Value": "us-east-2",
         },
-        {"Name": "DBUserBtgPactual", "Description": "Database user", "Value": "dbuser"},
-        {
-            "Name": "DBPasswordBtgPactual",
-            "Description": "Database password",
-            "Value": "dbpassword",
-        },
-        {
-            "Name": "DBHostWriterBtgPactual",
-            "Description": "Database writer host",
-            "Value": "dbhostwriter",
-        },
-        {
-            "Name": "DBHostReadBtgPactual",
-            "Description": "Database read host",
-            "Value": "dbhostread",
-        },
-        {"Name": "DBPortBtgPactual", "Description": "Database port", "Value": "5432"},
-        {"Name": "DBNameBtgPactual", "Description": "Database name", "Value": "dbname"},
         {
             "Name": "StackNameBtgPactual",
             "Description": "Stack name",
@@ -133,6 +105,6 @@ if __name__ == "__main__":
             "Value": "fromemail@example.com",
         },
     ]
-    region_origin = "us-east-2"
-
-    create_ssm_parameters(defaults, region_origin)
+    region_origin = "us-east-1"
+    ENVIRONMENT = "Develop"
+    create_ssm_parameters(defaults, region_origin, ENVIRONMENT)

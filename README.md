@@ -1,6 +1,6 @@
 # btg-backend
 
-# Python 3.9
+# Python 3.12
 
 ## Requirements to Run the Project Locally
 
