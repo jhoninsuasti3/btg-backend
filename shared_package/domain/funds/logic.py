@@ -2,6 +2,7 @@ from datetime import datetime
 from .entities import Subscription
 from .repositories import FundRepository
 
+
 class FundLogic:
     def __init__(self):
         self.repository = FundRepository()
@@ -16,10 +17,7 @@ class FundLogic:
             return f"No tiene saldo disponible para vincularse al fondo {fund.name}."
 
         subscription = Subscription(
-            user_id=user_id,
-            fund=fund,
-            amount=amount,
-            subscribed_at=datetime.now()
+            user_id=user_id, fund=fund, amount=amount, subscribed_at=datetime.now()
         )
         self.repository.subscribe(subscription)
         return f"Suscripción exitosa al fondo {fund.name}."

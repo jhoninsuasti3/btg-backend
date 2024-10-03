@@ -1,6 +1,7 @@
 from typing import List
 from .entities import Transaction
 
+
 class TransactionRepository:
     def __init__(self):
         self.transactions = []

@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from typing import List
 
+
 class TransactionResponse(BaseModel):
     id: str
     user_id: int
@@ -8,6 +9,7 @@ class TransactionResponse(BaseModel):
     amount: float
     transaction_type: str
     timestamp: str
+
 
 class TransactionHistoryResponse(BaseModel):
     transactions: List[TransactionResponse]

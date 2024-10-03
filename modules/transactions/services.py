@@ -1,6 +1,7 @@
 from domain.transactions.logic import TransactionLogic
 from .schemas import TransactionHistoryResponse
 
+
 class TransactionService:
     def __init__(self):
         self.logic = TransactionLogic()

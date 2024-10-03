@@ -4,6 +4,7 @@ from domain.funds.repositories import FundRepository
 from typing import List
 from datetime import datetime
 
+
 class TransactionLogic:
     def __init__(self):
         self.transaction_repository = TransactionRepository()
@@ -17,7 +18,7 @@ class TransactionLogic:
                 fund_name=fund.name,
                 amount=amount,
                 transaction_type="subscription",
-                timestamp=datetime.now()
+                timestamp=datetime.now(),
             )
             self.transaction_repository.add_transaction(transaction)
 
@@ -29,7 +30,7 @@ class TransactionLogic:
                 fund_name=fund.name,
                 amount=0,  # amount is not applicable for cancellations
                 transaction_type="cancellation",
-                timestamp=datetime.now()
+                timestamp=datetime.now(),
             )
             self.transaction_repository.add_transaction(transaction)
 

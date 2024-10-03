@@ -107,7 +107,11 @@ if __name__ == "__main__":
         },
         {"Name": "DBPortBtgPactual", "Description": "Database port", "Value": "5432"},
         {"Name": "DBNameBtgPactual", "Description": "Database name", "Value": "dbname"},
-        {"Name": "StackNameBtgPactual", "Description": "Stack name", "Value": "stackname"},
+        {
+            "Name": "StackNameBtgPactual",
+            "Description": "Stack name",
+            "Value": "stackname",
+        },
         {
             "Name": "EnvBucketNameBtgPactual",
             "Description": "Bucket name",

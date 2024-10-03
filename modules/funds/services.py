@@ -2,15 +2,14 @@ from domain.funds.logic import FundLogic
 from .schemas import SubscribeRequest, CancelSubscriptionRequest, FundResponse
 from typing import List
 
+
 class FundService:
     def __init__(self):
         self.logic = FundLogic()
 
     async def subscribe(self, request: SubscribeRequest) -> str:
         return self.logic.subscribe_to_fund(
-            user_id=request.user_id,
-            fund_id=request.fund_id,
-            amount=request.amount
+            user_id=request.user_id, fund_id=request.fund_id, amount=request.amount
         )
 
     async def cancel_subscription(self, request: CancelSubscriptionRequest) -> str:
@@ -23,7 +22,7 @@ class FundService:
                 id=fund.id,
                 name=fund.name,
                 min_investment=fund.min_investment,
-                category=fund.category
+                category=fund.category,
             )
             for fund in funds
         ]

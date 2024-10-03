@@ -11,34 +11,6 @@ Parameters:
     Description: secret key
     Type: String
     Default: secret_key
-  DBName:
-    Description: database name
-    Type: String
-    Default: inmensity-database-name
-  DBPort:
-    Description: database port
-    Type: String
-    Default: inmensity-database-port
-  DBUser:
-    Description: database user
-    Type: String
-    Default: inmensity-database-user
-  DBPassword:
-    Description: database password
-    Type: String
-    Default: inmensity-database-password
-  DBHostRead:
-    Description: database host read
-    Type: String
-    Default: inmensity-database-host-read
-  DBHostWriter:
-    Description: database host writer
-    Type: String
-    Default: inmensity-database-host-writer
-  EnvAwsSecretAccessKey:
-    Description: Env Aws Secret access key
-    Type: String
-    Default: secret_access_key
   EnvAwsRegion:
     Description: Env aws region
     Type: String
@@ -92,18 +64,6 @@ Parameters:
     Description: From Email
     Type: String
     Default: FromEmail
-  VpcRds:
-    Description: Vpc Rds
-    Type: String
-    Default: VpcRds
-  SubnetB:
-    Description: Subnet
-    Type: String
-    Default: SubnetB
-  SubnetA:
-    Description: Subnet
-    Type: String
-    Default: SubnetA
 Globals:
   Function:
     Timeout: !Ref GlobalTimeout
@@ -111,12 +71,6 @@ Globals:
     MemorySize: 256
     Handler: app.handler
     Runtime: python3.12
-    VpcConfig:
-      SecurityGroupIds:
-        - !Ref LambdasSecutiryGroup
-      SubnetIds:
-        - !Ref SubnetA
-        - !Ref SubnetB
     Architectures:
       - x86_64
     Environment:
@@ -380,19 +334,6 @@ Resources:
             Method: GET
             Auth:
               Authorizer: NONE
-
-  LambdasSecutiryGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: Allow lambda private
-      GroupName: !Sub lambdas-sg-${StackName}-${Environment}
-      VpcId: !Ref VpcRds
-      SecurityGroupIngress:
-        - IpProtocol: -1
-          CidrIp: 0.0.0.0/0
-      SecurityGroupEgress:
-        - IpProtocol: -1
-          CidrIp: 0.0.0.0/0
 
 
 Outputs:

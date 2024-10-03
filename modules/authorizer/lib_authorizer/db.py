@@ -1,4 +1,4 @@
-""" Authorizer DB to Dynamo """
+"""Authorizer DB to Dynamo"""
 
 import os
 from functools import reduce

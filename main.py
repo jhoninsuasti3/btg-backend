@@ -15,6 +15,7 @@ for key, value in config.items("pythonpath"):
     sys.path.append(value)
 
 from dotenv import load_dotenv
+
 load_dotenv(dotenv_path=".env")
 
 from fastapi.middleware.cors import CORSMiddleware
@@ -36,8 +37,10 @@ app.add_middleware(
 )
 
 # Incluye los routers de los módulos con prefijos específicos
-app.include_router(funds_router, prefix="/api/funds")         # Rutas de fondos
-app.include_router(transactions_router, prefix="/api/transactions")  # Rutas de transacciones
+app.include_router(funds_router, prefix="/api/funds")  # Rutas de fondos
+app.include_router(
+    transactions_router, prefix="/api/transactions"
+)  # Rutas de transacciones
 
 if __name__ == "__main__":
     uvicorn.run("main:app", port=8000, reload=True)
