@@ -3,20 +3,21 @@ import os
 from .services import TransactionService
 from .schemas import TransactionHistoryResponse
 from mangum import Mangum
+from starlette.requests import Request
 
 app = FastAPI(
     debug=os.getenv("DEBUG", False),
     title="Transactions Service",
 )
 
-router = APIRouter()
+router = APIRouter(prefix="/transactions")
 
 service = TransactionService()
 
 
-@router.get("/history/{user_id}", response_model=TransactionHistoryResponse)
-async def get_transaction_history(user_id: int):
-    return await service.get_transaction_history(user_id)
+@router.get("")
+async def get_transaction_history(request : Request):
+    return await service.get_transactions()
 
 
 app.include_router(router)

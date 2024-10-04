@@ -1,11 +1,8 @@
-from domain.transactions.logic import TransactionLogic
-from .schemas import TransactionHistoryResponse
-
+from shared_package.domain.transactions.logic import TransactionLogic
 
 class TransactionService:
     def __init__(self):
         self.logic = TransactionLogic()
 
-    async def get_transaction_history(self, user_id: int) -> TransactionHistoryResponse:
-        transactions = self.logic.get_transaction_history(user_id)
-        return TransactionHistoryResponse(transactions=transactions)
+    async def get_transactions(self):
+        return await self.logic.get_transactions()

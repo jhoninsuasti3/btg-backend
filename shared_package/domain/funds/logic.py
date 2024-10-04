@@ -45,7 +45,7 @@ class FundLogic:
             amount=amount,
             subscribed_at=datetime.now()
         )
-        self.repository.save_subscription(subscription)
+        self.repository.transaction(subscription, transaction_type="suscribe")
 
         return f"Suscripción exitosa al fondo {fund.name}."
 
@@ -59,7 +59,27 @@ class FundLogic:
         user = self.repository.get_user_by_id()
         new_balance = user['balance'] + Decimal(str(amount))
         self.repository.update_user_balance(user_id, new_balance)
-        self.repository.cancel_subscription(user_id, fund_id)
+
+
+        fund_data =  self.repository.get_fund_by_id(fund_id)
+        if not fund_data:
+            return "Fondo no encontrado."
+
+
+        fund = Fund(
+            id=fund_data['uuid'],
+            name=fund_data['name'],
+            category=fund_data['category'],
+            min_investment=fund_data['min_amount']
+        )
+
+        subscription = Subscription(
+            user_id=user_id,
+            fund=fund,
+            amount=amount,
+            subscribed_at=datetime.now()
+        )
+        self.repository.transaction(subscription, transaction_type="cancel")
         return f"Suscripción {fund_id} cancelada exitosamente y el monto de {amount} ha sido retornado al balance del usuario."
 
     async def get_user_subscriptions(self, user_id: int):

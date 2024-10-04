@@ -1,13 +1,12 @@
-from typing import List
-from .entities import Transaction
+from boto3.dynamodb.conditions import Key
+from shared_package.constants import client_dynamo, EnvironmentVariables
 
 
 class TransactionRepository:
     def __init__(self):
-        self.transactions = []
+        self.subscriptions_table = client_dynamo.Table(EnvironmentVariables.TRANSACTIONS_TABLE_NAME)
 
-    def add_transaction(self, transaction: Transaction):
-        self.transactions.append(transaction)
+    async def get_user_transactions(self):
+        response = self.subscriptions_table.scan()
+        return response.get('Items', [])
 
-    def get_user_transactions(self, user_id: int) -> List[Transaction]:
-        return [txn for txn in self.transactions if txn.user_id == user_id]

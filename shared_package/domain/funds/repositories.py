@@ -11,14 +11,16 @@ class FundRepository:
         self.subscriptions_table = client_dynamo.Table(EnvironmentVariables.TRANSACTIONS_TABLE_NAME)
         self.table_user = client_dynamo.Table(EnvironmentVariables.USERS_TABLE_NAME)
 
-    def save_subscription(self, subscription: Subscription):
+    def transaction(self, subscription: Subscription, transaction_type : str):
         self.subscriptions_table.put_item(Item={
             'uuid': subscription.id,
             'user_id': str(subscription.user_id),
             'fund_id': subscription.fund.id,
             'fund_name': subscription.fund.name,
             'amount': Decimal(str(subscription.amount)),
-            'subscribed_at': subscription.subscribed_at.isoformat()
+            'subscribed_at': subscription.subscribed_at.isoformat(),
+            'transaction_type': str(transaction_type)
+
         })
 
     def cancel_subscription(self,  user_id: str, fund_id: str):
