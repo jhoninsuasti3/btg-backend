@@ -1,5 +1,6 @@
 from shared_package.domain.transactions.repositories import TransactionRepository
 
+
 class TransactionLogic:
     def __init__(self):
         self.repository = TransactionRepository()

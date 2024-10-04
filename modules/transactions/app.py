@@ -16,7 +16,7 @@ service = TransactionService()
 
 
 @router.get("")
-async def get_transaction_history(request : Request):
+async def get_transaction_history(request: Request):
     return await service.get_transactions()
 
 
