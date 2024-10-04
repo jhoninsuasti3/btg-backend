@@ -19,3 +19,8 @@ class Subscription:
         self.fund = fund
         self.amount = amount
         self.subscribed_at = subscribed_at
+
+    def __str__(self) -> str:
+        return (f"Subscription with id={self.id}, user_id={self.user_id}, "
+                f"fund={self.fund.name}, amount={self.amount}, "
+                f"subscribed_at={self.subscribed_at.isoformat()}")
