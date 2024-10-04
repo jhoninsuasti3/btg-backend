@@ -22,6 +22,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from modules.funds.app import router as funds_router
 from modules.transactions.app import router as transactions_router
 from modules.auth.app import router as auth_router
+from modules.users.app import router as users_router
 
 app = FastAPI()
 
@@ -41,5 +42,6 @@ app.add_middleware(
 app.include_router(funds_router)  # Rutas de fondos
 app.include_router(transactions_router)  # Rutas de transacciones
 app.include_router(auth_router)  # Rutas de transacciones
+app.include_router(users_router)  # Rutas de users
 if __name__ == "__main__":
     uvicorn.run("main:app", port=8000, reload=True)

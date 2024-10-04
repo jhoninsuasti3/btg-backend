@@ -9,6 +9,7 @@ class FundRepository:
         self.subscriptions = []
         self.table_fund = client_dynamo.Table(EnvironmentVariables.FOUNDS_TABLE_NAME)
         self.subscriptions_table = client_dynamo.Table(EnvironmentVariables.TRANSACTIONS_TABLE_NAME)
+        self.table_user = client_dynamo.Table(EnvironmentVariables.USERS_TABLE_NAME)
 
     def save_subscription(self, subscription: Subscription):
         self.subscriptions_table.put_item(Item={
@@ -37,16 +38,14 @@ class FundRepository:
             return "Subscription not found"
 
     def get_user_subscription(self, user_id: str, fund_id: str):
-        user_id = str(user_id)
-        fund_id = str(fund_id)
         response = self.subscriptions_table.query(
             IndexName='User-index',
-            KeyConditionExpression=Key('user_id').eq(user_id)
+            KeyConditionExpression=Key('user_id').eq(str(user_id)),
+            FilterExpression=Attr('fund_id').eq(str(fund_id)) # Filter by fund_id
         )
-
         items = response.get('Items', [])
 
-        return [item for item in items if item.get('fund_id') == fund_id]
+        return items
 
 
 
@@ -57,3 +56,19 @@ class FundRepository:
     def get_fund_by_id(self, uuid: str):
         response = self.table_fund.get_item(Key={'uuid': uuid})
         return response.get('Item')
+
+    def get_user_by_id(self):
+        response =  self.table_user.scan(Limit=1)  # Limitamos a 1 para obtener solo el primer usuario
+        users = response.get('Items', [])
+
+        if not users:
+            raise ValueError("No se encontró ningún usuario en la tabla.")
+
+        return users[0]
+
+    def update_user_balance(self, user_id: str, new_balance: float):
+        self.table_user.update_item(
+            Key={'uuid': user_id},
+            UpdateExpression="SET balance = :balance",
+            ExpressionAttributeValues={':balance': Decimal(str(new_balance))}
+        )

@@ -1,5 +1,5 @@
 from shared_package.domain.funds.logic import FundLogic
-from schemas import SubscribeRequest, CancelSubscriptionRequest, FundResponse
+from .schemas import SubscribeRequest, CancelSubscriptionRequest, FundResponse
 from typing import List
 
 

@@ -3,13 +3,13 @@ from typing import List
 
 
 class SubscribeRequest(BaseModel):
-    user_id: int
+    user_id: str
     fund_id: str
     amount: float
 
 
 class CancelSubscriptionRequest(BaseModel):
-    user_id: int
+    user_id: str
     fund_id: str
 
 
