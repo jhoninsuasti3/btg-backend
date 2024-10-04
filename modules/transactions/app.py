@@ -1,7 +1,7 @@
 from fastapi import APIRouter, FastAPI
 import os
-from .services import TransactionService
-from .schemas import TransactionHistoryResponse
+from services import TransactionService
+from schemas import TransactionHistoryResponse
 from mangum import Mangum
 from starlette.requests import Request
 
@@ -16,7 +16,7 @@ service = TransactionService()
 
 
 @router.get("")
-async def get_transaction_history(request : Request):
+async def get_transaction_history(request: Request):
     return await service.get_transactions()
 
 

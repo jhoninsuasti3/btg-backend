@@ -1,7 +1,7 @@
 from fastapi import APIRouter, FastAPI
 import os
-from .services import FundService
-from .schemas import SubscribeRequest, CancelSubscriptionRequest
+from services import FundService
+from schemas import SubscribeRequest, CancelSubscriptionRequest
 from mangum import Mangum
 from starlette.requests import Request
 
