@@ -265,7 +265,7 @@ Resources:
           Properties:
             RestApiId: !Ref Api
             Path: /funds/cancel
-            Method: GET
+            Method: POST
             Auth:
               Authorizer: NONE
         FoundsAll:

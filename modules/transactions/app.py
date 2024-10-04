@@ -17,3 +17,7 @@ service = TransactionService()
 @router.get("/history/{user_id}", response_model=TransactionHistoryResponse)
 async def get_transaction_history(user_id: int):
     return await service.get_transaction_history(user_id)
+
+
+app.include_router(router)
+handler = Mangum(app)

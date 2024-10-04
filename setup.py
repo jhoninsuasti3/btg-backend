@@ -10,6 +10,7 @@ setup(
         "shared_package.domain",
         "shared_package.domain.funds",
         "shared_package.domain.transactions",
+        "shared_package.domain.users",
     ],
     description="Shared package",
     version="1.0.0",
