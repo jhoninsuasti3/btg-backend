@@ -39,15 +39,11 @@ class FundLogic:
         return f"Suscripción exitosa al fondo {fund.name}."
 
 
-    # Hacer que cancel_subscription sea asíncrona si estás interactuando con la base de datos
     async def cancel_subscription(self, user_id: int, fund_id: int) -> str:
-        await self.repository.cancel_subscription(user_id, fund_id)
-        return "Suscripción cancelada exitosamente."
+        return await self.repository.cancel_subscription(user_id, fund_id)
 
-    # Hacer que get_user_subscriptions sea asíncrona si estás interactuando con la base de datos
     async def get_user_subscriptions(self, user_id: int):
         return await self.repository.get_user_subscriptions(user_id)
 
-    # Hacer que get_funds sea asíncrona si estás interactuando con la base de datos
     async def get_funds(self):
         return await self.repository.get_funds()

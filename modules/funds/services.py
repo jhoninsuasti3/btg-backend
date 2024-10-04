@@ -15,7 +15,7 @@ class FundService:
         )
 
     async def cancel_subscription(self, request: CancelSubscriptionRequest) -> str:
-        return self.logic.cancel_subscription(request.user_id, request.fund_id)
+        return await self.logic.cancel_subscription(request.user_id, request.fund_id)
 
     async def get_funds(self) -> List[FundResponse]:
         # Aquí debes asegurarte de usar await para funciones asincrónicas

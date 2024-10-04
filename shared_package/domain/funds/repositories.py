@@ -21,7 +21,9 @@ class FundRepository:
         })
 
     def cancel_subscription(self, uuid: str, user_id: str):
-        print("-*/-*/-/"*30)
+        print("-*/*-/"*10)
+        print(uuid)
+        print(user_id)
         response = self.subscriptions_table.get_item(Key={'uuid': uuid})
         print(response)
         item = response.get('Item')
