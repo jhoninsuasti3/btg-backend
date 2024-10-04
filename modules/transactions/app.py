@@ -1,7 +1,7 @@
 from fastapi import APIRouter, FastAPI
 import os
-from .services import TransactionService
-from .schemas import TransactionHistoryResponse
+from services import TransactionService
+from schemas import TransactionHistoryResponse
 from mangum import Mangum
 from starlette.requests import Request
 
