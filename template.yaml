@@ -310,6 +310,34 @@ Resources:
             Auth:
               Authorizer: NONE
 
+  UserFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: modules/users
+      FunctionName: !Sub users-${StackName}-${Environment}
+      Description: !Sub users microservice «${Environment}»
+      Layers:
+        - !Ref LayerDependencies
+      Environment:
+        Variables:
+          FUNCTION_NAME: !Sub users-${StackName}-${Environment}
+          TOKEN_EXPIRATION: !Ref TokenExpiration
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - VPCAccessPolicy: {}
+      Events:
+        UsersAll:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /transactions
+            Method: POST
+            Auth:
+              Authorizer: NONE
+
+
+
+
 
 Outputs:
   Region:
