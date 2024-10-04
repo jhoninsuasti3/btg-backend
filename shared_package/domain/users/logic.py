@@ -13,4 +13,4 @@ class UserLogic:
         )
 
         await self.repository.create_user(user)
-        return f"Usuario {email} creado con éxito."
+        return user
