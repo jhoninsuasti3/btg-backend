@@ -102,51 +102,21 @@ logic.py # Lógica de negocio (use cases).
 
 1.  c
 
-### Create a New Virtual Environment
+### CONSIDEREACIONES
 
-0.  Clonar el repo
+Crear archivo .env
 
-1.  Create a virtual environment:
+ENV_AWS_ACCESS_KEY_ID=
+ENV_AWS_SECRET_ACCESS_KEY=
+ENVIRONMENT=
+FOUNDS_TABLE_NAME=
+TRANSACTIONS_TABLE_NAME=
+USERS_TABLE_NAME=
+TOKEN_EXPIRATION=
+ENV_AWS_REGION=
 
-    ```bash
-    virtualenv venv
-    ```
+- Crear el pipeline in code pipeline - AWS
 
-2.  Activate the virtual environment:
-
-    - On Windows:
-      ```bash
-      .\venv\Scripts\activate
-      ```
-    - On Unix or MacOS:
-      ```bash
-      source venv/bin/activate
-      ```
-
-3.  Install the dependencies:
-    ```bash
-    pip install -r develop.txt
-    ```
-
-En aws.
-
-Las llaves
-
-- Creacion de los templates de cloud formation.
-
-Se despiega el master y aqui se configuran los demas
-
-Validar esta doc que es lo primero que se hace
-
-https://aws.amazon.com/es/blogs/compute/introducing-aws-sam-pipelines-automatically-generate-deployment-pipelines-for-serverless-applications/
-
----- pdte
-
-- Crear el pipeline in code pipeline
-
-El code build busca el archivo configuration/buildspec -> Aqui validar los pasos y documentar un poco
-
-      - aws cloudformation package --template-file .aws-sam/build/template.yaml --s3-bucket $BUCKET_NAME --output-template-file packaged-template.yml
-      aqui crea el archivo packaged-template.yml (esto es guardado en s3   )
+El code build busca el archivo configuration/buildspec
 
 - Deploy

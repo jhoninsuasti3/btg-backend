@@ -285,6 +285,32 @@ Resources:
             Auth:
               Authorizer: NONE
 
+  TransactionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: modules/transactions
+      FunctionName: !Sub transactions-${StackName}-${Environment}
+      Description: !Sub transactions microservice «${Environment}»
+      Layers:
+        - !Ref LayerDependencies
+      Environment:
+        Variables:
+          FUNCTION_NAME: !Sub transactions-${StackName}-${Environment}
+          TOKEN_EXPIRATION: !Ref TokenExpiration
+      Policies:
+        - AmazonDynamoDBFullAccess
+        - VPCAccessPolicy: {}
+      Events:
+        TransactionsAll:
+          Type: Api
+          Properties:
+            RestApiId: !Ref Api
+            Path: /transactions
+            Method: GET
+            Auth:
+              Authorizer: NONE
+
+
 Outputs:
   Region:
     Description: "Region"
