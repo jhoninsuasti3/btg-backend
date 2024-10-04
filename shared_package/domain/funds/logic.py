@@ -40,7 +40,7 @@ class FundLogic:
 
 
     async def cancel_subscription(self, user_id: int, fund_id: int) -> str:
-        return await self.repository.cancel_subscription(user_id, fund_id)
+        return self.repository.cancel_subscription(user_id, fund_id)
 
     async def get_user_subscriptions(self, user_id: int):
         return await self.repository.get_user_subscriptions(user_id)

@@ -1,6 +1,6 @@
 from shared_package.domain.funds.entities import Subscription, Fund
 from shared_package.constants import client_dynamo, EnvironmentVariables
-from boto3.dynamodb.conditions import Key
+from boto3.dynamodb.conditions import Key, Attr
 from decimal import Decimal
 
 
@@ -20,24 +20,25 @@ class FundRepository:
             'subscribed_at': subscription.subscribed_at.isoformat()
         })
 
-    def cancel_subscription(self, uuid: str, user_id: str):
-        print("-*/*-/"*10)
-        print(uuid)
-        print(user_id)
-        response = self.subscriptions_table.get_item(Key={'uuid': uuid})
-        print(response)
-        item = response.get('Item')
-        print(item)
-        if item and item.get('user_id') == str(user_id):
-            self.subscriptions_table.delete_item(Key={'uuid': uuid})
+    def cancel_subscription(self,  user_id: str, fund_id: str):
+        response = self.subscriptions_table.query(
+            IndexName='User-index',
+            KeyConditionExpression=Key('user_id').eq(str(user_id)),
+            FilterExpression=Attr('fund_id').eq(str(fund_id)) # Filter by fund_id
+        )
+
+        items = response.get('Items', [])
+
+        if items:
+            item = items[0]
+            self.subscriptions_table.delete_item(Key={'uuid': item['uuid']})
             return "Cancelled done"
         else:
-            return "Subs not found"
+            return "Subscription not found"
 
     def get_user_subscription(self, user_id: str, fund_id: str):
         user_id = str(user_id)
         fund_id = str(fund_id)
-        # usar 'user_id' en la KeyConditionExpression si es la clave de partición
         response = self.subscriptions_table.query(
             IndexName='User-index',
             KeyConditionExpression=Key('user_id').eq(user_id)
@@ -56,4 +57,3 @@ class FundRepository:
     def get_fund_by_id(self, uuid: str):
         response = self.table_fund.get_item(Key={'uuid': uuid})
         return response.get('Item')
-

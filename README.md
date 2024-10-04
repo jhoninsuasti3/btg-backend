@@ -55,12 +55,16 @@
    ```bash
    sam local start-api
    ```
-####  Validaciones
-   - El usuario solo puede estar activo a un solo fondo.
-   - 
+
+#### Validaciones
+
+- El usuario solo puede estar activo a un solo fondo.
+-
 
 ### Dudas
-   - ¿ Como el usuario agrega un monto a su cuenta ?
+
+- ¿ Como el usuario agrega un monto a su cuenta ?
+
 ### Documentation
 
 Estructura del Módulo Funds
@@ -93,3 +97,56 @@ schemas.py # Esquemas (Pydantic models para requests/responses).
 entities.py # Entidades (Objetos de negocio).
 repositories.py # Repositorio (Abstracción de la persistencia).
 logic.py # Lógica de negocio (use cases).
+
+###
+
+1.  c
+
+### Create a New Virtual Environment
+
+0.  Clonar el repo
+
+1.  Create a virtual environment:
+
+    ```bash
+    virtualenv venv
+    ```
+
+2.  Activate the virtual environment:
+
+    - On Windows:
+      ```bash
+      .\venv\Scripts\activate
+      ```
+    - On Unix or MacOS:
+      ```bash
+      source venv/bin/activate
+      ```
+
+3.  Install the dependencies:
+    ```bash
+    pip install -r develop.txt
+    ```
+
+En aws.
+
+Las llaves
+
+- Creacion de los templates de cloud formation.
+
+Se despiega el master y aqui se configuran los demas
+
+Validar esta doc que es lo primero que se hace
+
+https://aws.amazon.com/es/blogs/compute/introducing-aws-sam-pipelines-automatically-generate-deployment-pipelines-for-serverless-applications/
+
+---- pdte
+
+- Crear el pipeline in code pipeline
+
+El code build busca el archivo configuration/buildspec -> Aqui validar los pasos y documentar un poco
+
+      - aws cloudformation package --template-file .aws-sam/build/template.yaml --s3-bucket $BUCKET_NAME --output-template-file packaged-template.yml
+      aqui crea el archivo packaged-template.yml (esto es guardado en s3   )
+
+- Deploy

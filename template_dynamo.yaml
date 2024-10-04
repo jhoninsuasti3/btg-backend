@@ -39,7 +39,7 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: !Ref DyanmoDBReadCapacityUnits
         WriteCapacityUnits: !Ref DyanmoDBWriteCapacityUnits
-  
+
   UsersDBTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -49,6 +49,8 @@ Resources:
           AttributeType: S
         - AttributeName: email
           AttributeType: S
+        - AttributeName: balance
+          AttributeType: N
       KeySchema:
         - AttributeName: uuid
           KeyType: HASH
