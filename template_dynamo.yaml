@@ -49,8 +49,6 @@ Resources:
           AttributeType: S
         - AttributeName: email
           AttributeType: S
-        - AttributeName: balance
-          AttributeType: N
       KeySchema:
         - AttributeName: uuid
           KeyType: HASH
